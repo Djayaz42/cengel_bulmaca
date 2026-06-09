@@ -1,0 +1,28 @@
+{
+  "puzzle": {
+    "id": "bolum_1",
+    "title": "Bölüm 1",
+    "category": "Test",
+    "grid": { "rows": 5, "cols": 5 },
+    "cells": [
+      {"row":0,"col":0,"type":"question","question_text_right":"bir meyve","question_text_down":"güneş ışığı","bg_color":"#00A896"},
+      {"row":0,"col":1,"type":"answer","part_of":["w1"]},
+      {"row":0,"col":2,"type":"answer","part_of":["w1"]},
+      {"row":0,"col":3,"type":"answer","part_of":["w1"]},
+      {"row":0,"col":4,"type":"answer","part_of":["w1"]},
+      {"row":1,"col":0,"type":"answer","part_of":["w2"]},
+      {"row":2,"col":0,"type":"answer","part_of":["w2"]},
+      {"row":3,"col":0,"type":"answer","part_of":["w2"]},
+      {"row":4,"col":0,"type":"answer","part_of":["w2"]},
+      {"row":1,"col":1,"type":"black"},{"row":1,"col":2,"type":"black"},{"row":1,"col":3,"type":"black"},{"row":1,"col":4,"type":"black"},
+      {"row":2,"col":1,"type":"black"},{"row":2,"col":2,"type":"black"},{"row":2,"col":3,"type":"black"},{"row":2,"col":4,"type":"black"},
+      {"row":3,"col":1,"type":"black"},{"row":3,"col":2,"type":"black"},{"row":3,"col":3,"type":"black"},{"row":3,"col":4,"type":"black"},
+      {"row":4,"col":1,"type":"black"},{"row":4,"col":2,"type":"black"},{"row":4,"col":3,"type":"black"},{"row":4,"col":4,"type":"black"}
+    ],
+    "words": [
+      {"id":"w1","direction":"right","start_row":0,"start_col":1,"answer":"ELMA","clue_cell":{"row":0,"col":0}},
+      {"id":"w2","direction":"down","start_row":1,"start_col":0,"answer":"ISIK","clue_cell":{"row":0,"col":0}}
+    ],
+    "images": []
+  }
+}
