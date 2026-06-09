@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/chapter_list_screen.dart';
+import 'screens/editor_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -16,7 +17,11 @@ class CrosswordApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Çengel Bulmaca',
       theme: AppTheme.data,
-      home: const ChapterListScreen(),
+      routes: {
+        '/': (_) => const ChapterListScreen(),
+        '/editor': (_) => const EditorScreen(),
+      },
+      initialRoute: Uri.base.path == '/editor' ? '/editor' : '/',
     );
   }
 }
