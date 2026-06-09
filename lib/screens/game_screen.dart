@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../controllers/game_controller.dart';
@@ -48,6 +50,21 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  void _checkAnswers() {
+    final wrongCount = _controller!.checkAnswers();
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            wrongCount == 0
+                ? 'Tüm hücreler doğru.'
+                : '$wrongCount hücre yanlış veya boş.',
+          ),
+        ),
+      );
+  }
+
   @override
   void dispose() {
     _controller?.removeListener(_onGameChanged);
@@ -72,25 +89,43 @@ class _GameScreenState extends State<GameScreen> {
       body: controller == null
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 650),
-                  child: Column(
-                    children: [
-                      _CluePanel(controller: controller),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Center(
-                            child: CrosswordGrid(controller: controller),
-                          ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final gridSize = math.min(
+                        constraints.maxWidth,
+                        math.max(180.0, constraints.maxHeight - 315.0),
+                      );
+                      return SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _CluePanel(controller: controller),
+                            SizedBox(
+                              width: gridSize,
+                              height: gridSize,
+                              child: CrosswordGrid(controller: controller),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: FilledButton.icon(
+                                onPressed: _checkAnswers,
+                                icon: const Icon(Icons.fact_check_outlined),
+                                label: const Text('Kontrol Et'),
+                              ),
+                            ),
+                            TurkishKeyboard(
+                              onLetter: controller.enterLetter,
+                              onDelete: controller.deleteLetter,
+                            ),
+                          ],
                         ),
-                      ),
-                      TurkishKeyboard(
-                        onLetter: controller.enterLetter,
-                        onDelete: controller.deleteLetter,
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -117,11 +152,9 @@ class _CluePanel extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.lightTurquoise, width: 2),
       ),
       child: Row(

@@ -52,6 +52,26 @@ void main() {
 
     expect(controller.isComplete, isTrue);
   });
+
+  test('girilen harfin doğruluğu anında hesaplanır', () {
+    controller.selectCell(const GridPosition(0, 0));
+    controller.enterLetter('E');
+    expect(controller.isCellCorrect(const GridPosition(0, 1)), isTrue);
+
+    controller.enterLetter('X');
+    expect(controller.isCellCorrect(const GridPosition(0, 2)), isFalse);
+  });
+
+  test('kontrol tüm yanlış ve boş cevap hücrelerini sayar', () {
+    controller.selectCell(const GridPosition(0, 0));
+    controller.enterLetter('E');
+    controller.enterLetter('X');
+
+    expect(controller.checkAnswers(), 7);
+    expect(controller.shouldHighlightError(const GridPosition(0, 2)), isTrue);
+    expect(controller.shouldHighlightError(const GridPosition(0, 3)), isTrue);
+    expect(controller.shouldHighlightError(const GridPosition(0, 1)), isFalse);
+  });
 }
 
 final _puzzleJson = <String, dynamic>{

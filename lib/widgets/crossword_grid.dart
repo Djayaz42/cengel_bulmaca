@@ -78,23 +78,35 @@ class _GridCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (cell?.questionRight != null)
-                Text(
-                  '${cell!.questionRight} →',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${cell!.questionRight} →',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
+              if (cell?.questionRight != null && cell?.questionDown != null)
+                const Divider(height: 1, thickness: 0.6, color: Colors.white70),
               if (cell?.questionDown != null)
-                Text(
-                  '${cell!.questionDown} ↓',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${cell!.questionDown} ↓',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
             ],
@@ -105,22 +117,34 @@ class _GridCell extends StatelessWidget {
 
     final selected = controller.selectedCell == position;
     final inWord = controller.isInSelectedWord(position);
+    final correctness = controller.isCellCorrect(position);
+    final showError = controller.shouldHighlightError(position);
+    final background = correctness == true
+        ? Colors.green.shade100
+        : correctness == false
+        ? Colors.red.shade100
+        : selected
+        ? AppColors.darkTurquoise
+        : inWord
+        ? AppColors.selectedWord
+        : Colors.white;
+
     return InkWell(
       onTap: () => controller.selectCell(position),
       child: Container(
         decoration: BoxDecoration(
-          color: selected
-              ? AppColors.darkTurquoise
-              : inWord
-              ? AppColors.selectedWord
-              : Colors.white,
-          border: border,
+          color: background,
+          border: showError
+              ? Border.all(color: Colors.red.shade700, width: 2)
+              : border,
         ),
         alignment: Alignment.center,
         child: Text(
           controller.letterAt(position),
           style: TextStyle(
-            color: selected ? Colors.white : AppColors.ink,
+            color: selected && correctness == null
+                ? Colors.white
+                : AppColors.ink,
             fontSize: 25,
             fontWeight: FontWeight.w900,
           ),

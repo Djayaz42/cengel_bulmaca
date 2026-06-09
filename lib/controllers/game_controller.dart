@@ -10,6 +10,7 @@ class GameController extends ChangeNotifier {
 
   final Puzzle puzzle;
   final Map<GridPosition, String> _letters = {};
+  bool _showValidationErrors = false;
 
   PuzzleWord? selectedWord;
   GridPosition? selectedCell;
@@ -22,8 +23,29 @@ class GameController extends ChangeNotifier {
   }
 
   Map<GridPosition, String> get letters => Map.unmodifiable(_letters);
+  bool get showValidationErrors => _showValidationErrors;
 
   String letterAt(GridPosition position) => _letters[position] ?? '';
+
+  String? correctLetterAt(GridPosition position) {
+    for (final word in puzzle.wordsAt(position)) {
+      final index = word.positions.indexOf(position);
+      if (index >= 0) return word.answer[index];
+    }
+    return null;
+  }
+
+  bool? isCellCorrect(GridPosition position) {
+    final letter = letterAt(position);
+    if (letter.isEmpty) return null;
+    return letter == correctLetterAt(position);
+  }
+
+  bool shouldHighlightError(GridPosition position) {
+    return _showValidationErrors &&
+        puzzle.cellAt(position)?.type == CellType.answer &&
+        isCellCorrect(position) != true;
+  }
 
   bool isInSelectedWord(GridPosition position) {
     return selectedWord?.positions.contains(position) ?? false;
@@ -81,6 +103,7 @@ class GameController extends ChangeNotifier {
     if (position == null || word == null || letter.isEmpty) return;
 
     _letters[position] = letter.toUpperCase();
+    _showValidationErrors = false;
     final index = word.positions.indexOf(position);
     if (index >= 0 && index < word.positions.length - 1) {
       selectedCell = word.positions[index + 1];
@@ -100,12 +123,28 @@ class GameController extends ChangeNotifier {
         _letters.remove(selectedCell);
       }
     }
+    _showValidationErrors = false;
     notifyListeners();
   }
 
   void clear() {
     _letters.clear();
+    _showValidationErrors = false;
     notifyListeners();
+  }
+
+  int checkAnswers() {
+    _showValidationErrors = true;
+    final wrongCells = <GridPosition>{};
+    for (final word in puzzle.words) {
+      for (final position in word.positions) {
+        if (isCellCorrect(position) != true) {
+          wrongCells.add(position);
+        }
+      }
+    }
+    notifyListeners();
+    return wrongCells.length;
   }
 
   bool get isComplete {

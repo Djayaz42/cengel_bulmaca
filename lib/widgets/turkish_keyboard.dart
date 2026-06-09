@@ -21,34 +21,18 @@ class TurkishKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(6, 8, 6, 10),
+      width: double.infinity,
+      padding: const EdgeInsets.all(4),
       color: AppColors.lightTurquoise,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 4,
+        runSpacing: 4,
         children: [
           for (final row in rows)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (final letter in row)
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: _KeyButton(
-                          label: letter,
-                          onTap: () => onLetter(letter),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          SizedBox(
-            width: 86,
-            child: _KeyButton(icon: Icons.backspace_outlined, onTap: onDelete),
-          ),
+            for (final letter in row)
+              _KeyButton(label: letter, onTap: () => onLetter(letter)),
+          _KeyButton(icon: Icons.backspace_outlined, onTap: onDelete),
         ],
       ),
     );
@@ -68,11 +52,12 @@ class _KeyButton extends StatelessWidget {
       color: Colors.white,
       borderRadius: BorderRadius.circular(8),
       elevation: 1,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onTap,
-        child: SizedBox(
-          height: 38,
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onTap,
           child: Center(
             child: icon != null
                 ? Icon(icon, color: AppColors.darkTurquoise, size: 20)
