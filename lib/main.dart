@@ -1,18 +1,9 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'providers/game_provider.dart';
-import 'screens/chapters_screen.dart';
-import 'utils/app_theme.dart';
+
+import 'screens/chapter_list_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
   runApp(const CrosswordApp());
 }
 
@@ -21,16 +12,11 @@ class CrosswordApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => GameProvider()),
-      ],
-      child: MaterialApp(
-        title: 'Çengel Bulmaca',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.theme,
-        home: const ChaptersScreen(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Çengel Bulmaca',
+      theme: AppTheme.data,
+      home: const ChapterListScreen(),
     );
   }
 }
